@@ -1,3 +1,53 @@
+
+let playerScore = 0;
+let computerScore = 0;
+let roundwinner = '';
+const result = document.getElementById('result');
+const playerScoreDiv = document.getElementById('playerScore');
+const computerScoreDiv = document.getElementById('computerScore');
+const rock = document.getElementById('rock');
+const paper = document.getElementById('paper');
+const scissors = document.getElementById('scissors');
+const reset = document.getElementById('reset');
+
+rock.addEventListener('click', () => { handleClick('rock') });
+paper.addEventListener('click', () => { handleClick('paper') });
+scissors.addEventListener('click', () => { handleClick('scissors') });
+reset.addEventListener('click', () => { resetGame() });
+
+
+function playRound(playerSelection, computerSelection)
+{
+ 
+    if (playerSelection === computerSelection)
+    {
+        roundwinner = "It's a tie!";
+    }
+
+    if (
+        (playerSelection === "rock" && computerSelection === "scissors") || 
+    (playerSelection === "paper" && computerSelection === "rock") ||
+    (playerSelection === "scissors" && computerSelection === "paper")
+    )
+    {
+        playerScore++;
+        roundwinner = 'player';
+    }
+
+    if (
+        (playerSelection === "rock" && computerSelection === "paper") ||
+    (playerSelection === "paper" && computerSelection === "scissors") ||
+    (playerSelection === "scissors" && computerSelection === "rock")
+    )
+    {
+        computerScore++;
+        roundwinner = 'computer';
+    }
+
+    UpdateScore (roundwinner, playerScore, computerScore);
+}
+
+
 function getComputerChoice()
 {
     let choices = ["rock", "paper", "scissors"];
@@ -5,83 +55,61 @@ function getComputerChoice()
     return choices[randomNumber];
 }
 
-function playerSelection()
+
+
+
+function UpdateScore(roundwinner, playerScore, computerScore)
 {
-    let playerChoice = prompt("Rock, Paper, or Scissors?");
-    return playerChoice.toLowerCase();
+    if (roundwinner == 'It\'s a tie!')
+    {
+        result.textContent = "It's a tie!";
+
+    } else if (roundwinner == 'player')
+    {
+        result.textContent = "You win the round!";
+    } else if (roundwinner == 'computer')
+    {
+        result.textContent = "You lose the round!";
+    }
+
+    playerScoreDiv.textContent = `${playerScore}`
+    computerScoreDiv.textContent = `${computerScore}`
+
+
 }
 
-function playRound(playerSelection, computerSelection)
+function gameOver ()
 {
-    if (playerSelection === computerSelection)
-    {
-        return "It's a tie!";
-    }
-    else if (playerSelection === "rock")
-    {
-        if (computerSelection === "paper")
-        {
-            return "You lose! Paper beats Rock";
-        }
-        else
-        {
-            return "You win! Rock beats Scissors";
-        }
-    }
-    else if (playerSelection === "paper")
-    {
-        if (computerSelection === "scissors")
-        {
-            return "You lose! Scissors beats Paper";
-        }
-        else
-        {
-            return "You win! Paper beats Rock";
-        }
-    }
-    else if (playerSelection === "scissors")
-    {
-        if (computerSelection === "rock")
-        {
-            return "You lose! Rock beats Scissors";
-        }
-        else
-        {
-            return "You win! Scissors beats Paper";
-        }
-    }
-    else
-    {
-        return "Invalid choice";
-    }
-}
-
-function game()
-{
-    let playerScore = 0;
-    let computerScore = 0;
-    do{
-        let result = playRound(playerSelection(), getComputerChoice());
-        if (result.includes("win"))
-        {
-            playerScore++;
-        }
-        else if (result.includes("lose"))
-        {
-            computerScore++;
-        }
-        console.log(result);
-    } while (playerScore < 5 && computerScore < 5)
     if (playerScore == 5)
     {
-        console.log("You win the game!");
-    }
-    else
+        result.textContent = "You win the game!";
+    } else if (computerScore == 5)
     {
-        console.log("You lose the game!");
+        result.textContent = "You lose the game!";
     }
 }
 
 
+function handleClick(playerChoice){
+
+{if (playerScore < 5 && computerScore < 5){
+    playRound(playerChoice, getComputerChoice());
+    UpdateScore(roundwinner, playerScore, computerScore);
+    gameOver();
+} else {
+    result.textContent = "Game over! Please click reset to play again.";
+}
+}
+}
+
+function resetGame()
+{
+    playerScore = 0;
+    computerScore = 0;
+    roundwinner = '';
+    result.textContent = '';
+    playerScoreDiv.textContent = `${playerScore}`
+    computerScoreDiv.textContent = `${computerScore}`
+}
+
 //console.log (playRound(playerSelection(), getComputerChoice()));
-game();
